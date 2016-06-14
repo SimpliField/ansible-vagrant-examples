@@ -1,0 +1,19 @@
+---
+- hosts: mongo
+  become: True
+
+  roles:
+    - SimpliField.mongo
+    - SimpliField.mongo-replica-set
+    - SimpliField.network-hosts
+
+- hosts: mongo1
+  become: true
+
+  roles:
+    - SimpliField.mongo-replica-set
+
+  tasks:
+    - mongodb_replica_set: state="{{mongo_replication_state | default(omit) }}"
+    - mongodb_replica_set: member="mongo2" state=present
+    - mongodb_replica_set: member="mongo3" state=present

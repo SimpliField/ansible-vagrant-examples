@@ -1,0 +1,15 @@
+mongo1 ansible_host=192.168.42.2 ansible_ssh_private_key_file=.vagrant/machines/mongo1/virtualbox/private_key
+mongo2 ansible_host=192.168.42.3 ansible_ssh_private_key_file=.vagrant/machines/mongo2/virtualbox/private_key
+mongo3 ansible_host=192.168.42.4 ansible_ssh_private_key_file=.vagrant/machines/mongo3/virtualbox/private_key
+
+[all:vars]
+ansible_connexion=ssh
+ansible_user=vagrant
+
+[mongo]
+mongo1 mongo_interfaces='["192.168.42.2","127.0.0.1"]' mongo_replication_state=initiated
+mongo2 mongo_interfaces='["192.168.42.3","127.0.0.1"]'
+mongo3 mongo_interfaces='["192.168.42.4","127.0.0.1"]'
+
+[mongo:vars]
+mongo_replication_set=rsmongo
