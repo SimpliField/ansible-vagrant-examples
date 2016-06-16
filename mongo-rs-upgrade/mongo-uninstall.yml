@@ -1,0 +1,14 @@
+- name: stop mongodb
+  service:
+    name: mongod
+    state: stopped
+- name: uninstall mongodb
+  apt:
+    name: "{{ item }}"
+    state: absent
+  with_items:
+  - mongodb-org
+  - mongodb-org-mongos
+  - mongodb-org-shell
+  - mongodb-org-server
+  - mongodb-org-tools

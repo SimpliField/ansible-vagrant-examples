@@ -1,0 +1,6 @@
+- src: SimpliField.mongo
+  version: v1.1.0
+- src: SimpliField.mongo-replica-set
+  version: v2.0.0
+- src: SimpliField.network-hosts
+  version: v1.0.0

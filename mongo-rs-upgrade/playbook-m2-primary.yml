@@ -1,0 +1,15 @@
+# Set m2 as primary
+- hosts: mongo3
+  become: true
+
+  tasks:
+    - name: "{{ inventory_hostname }} could not be primary"
+      command: mongo --eval "rs.freeze(30)"
+
+- hosts: mongo1
+  become: true
+
+  tasks:
+    - name: "{{ inventory_hostname }} is now more primary"
+      command: mongo --eval "rs.stepDown(30)"
+      ignore_errors: yes

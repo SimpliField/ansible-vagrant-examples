@@ -1,0 +1,13 @@
+- name: stop mongodb
+  service:
+    name: mongod
+    state: stopped
+
+- name: stat /data/db
+  stat:
+    path: "/data/db"
+  register: data_path
+
+- name: archive /data/db
+  command: creates="/data/legacy-db" mv /data/db /data/legacy-db
+  when: data_path.stat.exists

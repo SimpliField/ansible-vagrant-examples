@@ -1,0 +1,37 @@
+---
+# Upgrade to 3.0
+- hosts: mongo2
+  become: true
+
+  tasks:
+  - include: mongo-uninstall.yml
+
+- hosts: mongo2
+  become: true
+  roles:
+  - role: SimpliField.mongo
+    mongodb_version: 3.0
+
+- hosts: mongo2
+  become: true
+  tasks:
+  - include: mongo-start.yml
+
+# Archive old storage
+- hosts: mongo2
+  become: true
+  tasks:
+  - include: mongo-archive.yml
+
+# Set new mongodb storage engine
+- hosts: mongo2
+  become: true
+  roles:
+  - role: SimpliField.mongo
+    mongodb_version: 3.0
+    mongodb_storage_engine: "wiredTiger"
+
+- hosts: mongo2
+  become: true
+  tasks:
+  - include: mongo-start.yml
