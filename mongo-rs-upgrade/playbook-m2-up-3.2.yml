@@ -1,0 +1,18 @@
+---
+# Upgrade to 3.2
+- hosts: mongo2
+  become: true
+
+  tasks:
+  - include: mongo-uninstall.yml
+
+- hosts: mongo2
+  become: true
+  roles:
+  - role: SimpliField.mongo
+    mongodb_version: 3.2
+
+- hosts: mongo2
+  become: true
+  tasks:
+  - include: mongo-start.yml
