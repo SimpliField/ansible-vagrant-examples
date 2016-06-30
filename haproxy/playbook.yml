@@ -1,0 +1,51 @@
+---
+# Setup nodejs
+- hosts: haproxy
+  become: True
+
+  roles:
+    - SimpliField.node
+
+# Launch two stupid webservers
+- hosts: haproxy
+  become: true
+
+  tasks:
+  - name: "install forever"
+    command: npm i -g forever
+  - name: "copy server files"
+    copy:
+      src: "{{item}}.js"
+      dest: "/root/{{item}}.js"
+    with_items:
+    - server1
+    - server2
+  - name: "check node process running"
+    command: forever list
+    register: forever_list
+    changed_when: false
+
+  - name: "start http servers"
+    command: forever start /root/{{item}}.js
+    when: "forever_list.stdout.find('/root/{{item}}.js') == -1"
+    with_items:
+    - server1
+    - server2
+
+# Setup haproxy
+- hosts: haproxy
+  become: true
+
+  vars:
+  - haproxy_frontends:
+      http_front:
+      - bind *:80
+      - default_backend http_back
+  - haproxy_backends:
+      http_back:
+      - balance roundrobin
+      - server http1 127.0.0.1:8000 check
+      - server http2 127.0.0.1:8001 check
+
+  roles:
+  - SimpliField.haproxy
