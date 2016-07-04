@@ -1,0 +1,11 @@
+---
+- hosts: fileretention
+  become: True
+  vars:
+    file_retention:
+      path: "/var/www/backup"
+      days: 30
+      user: root
+
+  roles:
+    - SimpliField.file-retention
