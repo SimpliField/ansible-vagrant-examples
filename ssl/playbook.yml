@@ -1,0 +1,10 @@
+---
+- hosts: ssl
+  become: True
+  vars:
+    ssl_common_name: MyCert
+    ssl_path_owner: root
+    ssl_path_group: root
+
+  roles:
+    - SimpliField.ssl
