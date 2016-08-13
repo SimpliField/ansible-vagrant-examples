@@ -1,0 +1,52 @@
+---
+# Setup nodejs
+- hosts: nginx
+  become: True
+
+  roles:
+    - SimpliField.node
+
+# Launch one stupid webservers
+- hosts: nginx
+  become: true
+
+  tasks:
+  - name: "install forever"
+    command: npm i -g forever
+  - name: "copy server files"
+    copy:
+      src: "{{item}}.js"
+      dest: "/root/{{item}}.js"
+    with_items:
+    - server1
+  - name: "check node process running"
+    command: forever list
+    register: forever_list
+    changed_when: false
+
+  - name: "start http servers"
+    command: forever start /root/{{item}}.js
+    when: "forever_list.stdout.find('/root/{{item}}.js') == -1"
+    with_items:
+    - server1
+
+# Setup nginx
+- hosts: nginx
+  become: true
+
+  roles:
+  - role: SimpliField.nginx
+    nginx_configs:
+      stupid_server:
+      - upstream stupid_server_upstream {
+          server 127.0.0.1:8000 fail_timeout=5m;
+          keepalive 16;
+        }
+    nginx_sites:
+      stupid_server-http:
+        - listen 80 default
+        - server_name nginx.com
+        - location / {
+            proxy_pass         http://stupid_server_upstream;
+          }
+
