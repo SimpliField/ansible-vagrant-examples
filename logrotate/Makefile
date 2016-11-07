@@ -1,7 +1,7 @@
 all: ansible
 
 vagrant:
-	vagrant box update
+	# vagrant box update
 	vagrant up
 
 ansible: vagrant requirements
