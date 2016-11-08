@@ -1,0 +1,9 @@
+---
+# setup node
+- hosts: node
+  become: true
+
+  vars:
+
+  roles:
+  - role: SimpliField.node
