@@ -1,0 +1,10 @@
+---
+# setup rabbit
+- hosts: rabbits
+  become: true
+
+  vars:
+
+  roles:
+  - role: SimpliField.network-hosts
+  - role: SimpliField.rabbitmq
