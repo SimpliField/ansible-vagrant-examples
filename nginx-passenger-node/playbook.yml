@@ -1,0 +1,48 @@
+---
+# Setup nodejs
+- hosts: nginx
+  become: True
+
+  roles:
+  - role: SimpliField.node
+    nodejs_version: 6.x
+  - role: SimpliField.path
+    path: "/data"
+    mode: "755"
+  - role: SimpliField.users
+    users:
+    - www:
+      name: "www"
+      comment: "www user"
+      createhome: "yes"
+      home: "/data/www"
+      shell: "/bin/false"
+
+# Launch one stupid webservers
+- hosts: nginx
+  become: true
+
+  tasks:
+  - name: "copy server files"
+    copy:
+      src: "{{item}}.js"
+      dest: "/data/www/{{item}}.js"
+    with_items:
+    - server1
+    become_user: www
+
+# Setup nginx
+- hosts: nginx
+  become: true
+
+  roles:
+  - role: SimpliField.nginx-passenger
+    nginx_sites:
+      stupid_server-http:
+        - listen 80 default
+        - server_name nginx.com
+        - passenger_enabled on
+        - passenger_user app
+        - passenger_app_type node
+        - passenger_startup_file /data/www/server1.js
+
