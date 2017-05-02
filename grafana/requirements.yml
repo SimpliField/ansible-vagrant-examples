@@ -1,0 +1,3 @@
+- src: SimpliField.influxdb
+- src: SimpliField.telegraf
+- src: SimpliField.grafana

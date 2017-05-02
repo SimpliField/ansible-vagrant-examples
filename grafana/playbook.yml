@@ -1,0 +1,11 @@
+---
+# setup grafana
+- hosts: grafana
+  become: true
+
+  vars:
+
+  roles:
+  - role: SimpliField.influxdb
+  - role: SimpliField.grafana
+  - role: SimpliField.telegraf
