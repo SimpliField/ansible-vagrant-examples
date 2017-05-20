@@ -1,2 +1,3 @@
 - src: SimpliField.rabbitmq
+  version: v1.2.0
 - src: SimpliField.network-hosts
