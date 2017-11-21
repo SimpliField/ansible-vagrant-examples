@@ -1,0 +1,36 @@
+---
+# setup rabbit
+- hosts: rabbits
+  become: true
+
+  vars:
+    rabbitmq_erlang_cookie: "ZRRMCLIAFSGJKVTHRHOX"
+
+  roles:
+  - role: SimpliField.network-hosts
+  - role: SimpliField.rabbitmq
+
+- hosts: rabbit2,rabbit3
+  become: true
+
+  vars:
+    rabbitmq_cluster_master: "rabbit1"
+
+  tasks:
+  - name: check clustering
+    shell: rabbitmqctl status | grep clustering || true
+    register: rabbitmqctl_clustering_status
+    changed_when: false
+
+  - name: stop rabbitmq app
+    shell: rabbitmqctl stop_app
+    when: rabbitmqctl_clustering_status.stdout == ""
+
+  - name: add this node to cluster
+    shell: rabbitmqctl join_cluster rabbit@{{ rabbitmq_cluster_master }}
+    when: rabbitmqctl_clustering_status.stdout == ""
+    register: rabbitmq_join_cluster_output
+
+  - name: start rabbitmq app
+    shell: rabbitmqctl start_app
+    when: rabbitmqctl_clustering_status.stdout == ""
