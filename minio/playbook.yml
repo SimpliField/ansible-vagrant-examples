@@ -1,0 +1,32 @@
+---
+# setup minio user & path
+- hosts: minio
+  become: true
+
+  vars:
+
+  roles:
+  - role: SimpliField.users
+    users:
+    - miniouser:
+      name: "minio"
+      comment: "minio user"
+      createhome: "yes"
+      shell: "/bin/false"
+  - role: SimpliField.path
+    path: "/data-objects"
+    owner: "minio"
+    group: "minio"
+
+# setup minio
+- hosts: minio
+  become: true
+
+  vars:
+    minio_datadirs:
+    - /data-objects
+    minio_access_key: "admin"
+    minio_secret_key: "adminadmin"
+
+  roles:
+  - SimpliField.minio
