@@ -1,0 +1,38 @@
+---
+# clean minio files
+- hosts: minios
+  become: true
+
+  tasks:
+  - name: "Delete /data-objects"
+    shell: rm -rf /data-objects
+
+# setup minio user & path
+- hosts: minios
+  become: true
+
+  roles:
+  - role: SimpliField.users
+    users:
+    - miniouser:
+      name: "minio"
+      comment: "minio user"
+      createhome: "yes"
+      shell: "/bin/false"
+  - role: SimpliField.path
+    path: "/data-objects"
+    owner: "minio"
+    group: "minio"
+
+# setup minios
+- hosts: minios
+  become: true
+
+  vars:
+    minio_datadirs: []
+    minio_access_key: "admin"
+    minio_secret_key: "adminadmin"
+    minio_opts: "{{ groups['minios'] | map('extract', hostvars, ['ansible_host']) | map('regex_replace', '^(.*)', 'http://\\1/data-objects') | join(' ') }}"
+
+  roles:
+  - SimpliField.minio

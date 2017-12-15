@@ -1,0 +1,3 @@
+- src: SimpliField.minio
+- src: SimpliField.users
+- src: SimpliField.path
