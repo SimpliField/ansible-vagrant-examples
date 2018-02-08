@@ -17,6 +17,17 @@
     path: "/data-objects"
     owner: "minio"
     group: "minio"
+  - role: SimpliField.path
+    path: "/home/minio/.minio/certs"
+    owner: "minio"
+    group: "minio"
+  - role: SimpliField.ssl
+    ssl_path: /home/minio/.minio/certs
+    ssl_path_owner: minio
+    ssl_path_group: minio
+    ssl_cert_self_signed: true
+    ssl_privkey_path: /home/minio/.minio/certs/private.key
+    ssl_cert_path: /home/minio/.minio/certs/public.crt
 
 # setup minio
 - hosts: minio

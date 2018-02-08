@@ -1,3 +1,5 @@
+- src: SimpliField.ssl
+  version: v1.1.0
 - src: SimpliField.minio
 - src: SimpliField.users
 - src: SimpliField.path
